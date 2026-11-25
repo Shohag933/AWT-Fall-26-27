@@ -1,0 +1,40 @@
+{
+  "info": {
+    "name": "Lab Task 3 - User Registration Validation",
+    "description": "Five required registration validation demonstrations. Start the API at http://localhost:3000 before running.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1 - Valid registration (201)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"fullName\": \"Rahim Ahmed\",\n  \"email\": \"rahim@gmail.com\",\n  \"password\": \"Rahim@123\",\n  \"age\": 22,\n  \"phone\": \"01712345678\",\n  \"accountType\": \"student\",\n  \"address\": \"Dhaka, Bangladesh\"\n}", "options": { "raw": { "language": "json" } } },
+        "url": "{{baseUrl}}/users/register"
+      },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 201 Created', () => pm.response.to.have.status(201));", "pm.test('does not expose password', () => pm.expect(pm.response.text()).not.to.include('Rahim@123'));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "2 - Invalid email (400)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"fullName\":\"Rahim Ahmed\",\"email\":\"invalid-email\",\"password\":\"Rahim@123\",\"age\":22,\"phone\":\"01712345678\",\"accountType\":\"student\"}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/users/register" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 400 Bad Request', () => pm.response.to.have.status(400));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "3 - Weak password (400)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"fullName\":\"Rahim Ahmed\",\"email\":\"rahim@gmail.com\",\"password\":\"12345\",\"age\":22,\"phone\":\"01712345678\",\"accountType\":\"student\"}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/users/register" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 400 Bad Request', () => pm.response.to.have.status(400));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "4 - Age below 18 (400)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"fullName\":\"Rahim Ahmed\",\"email\":\"rahim@gmail.com\",\"password\":\"Rahim@123\",\"age\":15,\"phone\":\"01712345678\",\"accountType\":\"student\"}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/users/register" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 400 Bad Request', () => pm.response.to.have.status(400));"], "type": "text/javascript" } }]
+    },
+    {
+      "name": "5 - Unexpected isAdmin field (400)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"fullName\":\"Rahim Ahmed\",\"email\":\"rahim@gmail.com\",\"password\":\"Rahim@123\",\"age\":22,\"phone\":\"01712345678\",\"accountType\":\"student\",\"isAdmin\":true}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/users/register" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.test('returns 400 Bad Request', () => pm.response.to.have.status(400));"], "type": "text/javascript" } }]
+    }
+  ],
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:3000" }]
+}
